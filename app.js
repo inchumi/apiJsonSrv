@@ -4,29 +4,29 @@ const fs = require('fs/promises');
 const app = express();
 const PORT = 3001;
 
-// Endpoint para obtener un producto por SKU
-app.get('/sku/:sku', async (req, res) => {
+// Endpoint para obtener todos los productos
+app.get('/sku', async (req, res) => {
   try {
-    const sku = req.params.sku;
     const products = await loadProducts();
-    const product = products.find((p) => p.sku === sku);
-
-    if (product) {
-      res.json(product);
-    } else {
-      res.status(404).json({ error: 'Producto no encontrado' });
-    }
+    res.json(products);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
-// Endpoint para obtener todos los productos
-app.get('/sku/allProducts', async (req, res) => {
+// Endpoint para obtener un producto por SKU
+app.get('/sku/:sku', async (req, res) => {
   try {
+    const sku = req.params.sku;
     const products = await loadProducts();
-    res.json(products);
+    const product = products.find((p) => p.items[0].name === sku);
+
+    if (product) {
+      res.json(product);
+    } else {
+      res.status(404).json({ error: 'Producto no encontrado' });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error interno del servidor' });
